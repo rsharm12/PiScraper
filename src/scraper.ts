@@ -99,14 +99,14 @@ function initialize(isResuming: boolean) {
   const interval = 62 * 1000;
   const offset = 2000;
 
-  // const currentDate = new Date();
-  // const message = isResuming
-  //   ? `Polling ended ): Restarting script execution at ${currentDate.toLocaleString()}...`
-  //   : `Hello, I'm a robot, and I'll help you find a PS5 from one of ${Object.keys(Companies).join(
-  //       ", "
-  //     )}. My current polling interval is 1 minute. Beginning script execution at ${currentDate.toLocaleString()}...`;
+  const currentDate = new Date();
+  const message = isResuming
+    ? `Polling ended ): Restarting script execution at ${currentDate.toLocaleString()}...`
+    : `Hello, I'm a robot, and I'll help you find a PS5 from one of ${Object.keys(Companies).join(
+        ", "
+      )}. My current polling interval is 1 minute. Beginning script execution at ${currentDate.toLocaleString()}...`;
 
-  // sendMessage(message);
+  sendMessage(message);
 
   setRandomInterval(
     () => {
