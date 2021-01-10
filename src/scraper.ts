@@ -22,8 +22,7 @@ const Companies: Record<
     validator: validateAmazon,
   },
   BestBuy: {
-    url:
-      "https://www.bestbuy.com/site/playstation-5/ps5-consoles/pcmcat1587395025973.c?id=pcmcat1587395025973",
+    url: "https://www.bestbuy.com/site/playstation-5/ps5-consoles/pcmcat1587395025973.c",
     validator: validateBestBuy,
     withUserAgent: false,
   },
@@ -106,7 +105,7 @@ function initialize(isResuming: boolean) {
         ", "
       )}. My current polling interval is 1 minute. Beginning script execution at ${currentDate.toLocaleString()}...`;
 
-  sendMessage(message);
+  console.log(message);
 
   setRandomInterval(
     () => {
