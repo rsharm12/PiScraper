@@ -36,11 +36,11 @@ const Companies: Record<
   },
 };
 
-function sendMessage(message: string) {
+function sendMessage(message: string, toAdmin?: boolean) {
   login({ email: process.env.FB_USER, password: process.env.FB_PASS }, (err, api) => {
     if (err) return console.error(err);
 
-    api.sendMessage(message, process.env.FB_THREAD_ID);
+    api.sendMessage(message, toAdmin ? process.env.FB_ADMIN_THREAD_ID : process.env.FB_THREAD_ID);
   });
 }
 
@@ -93,28 +93,31 @@ async function runScraper() {
   console.log(returnMessage);
 }
 
-function initialize(isResuming: boolean) {
+const SCRAPE_INTERVAL = 62 * 1000; // 62s for additional randomness;
+const HEARTBEAT_INTERVAL = 60 * 60 * 1000;
+
+function heartbeat() {
+  const currentDate = new Date();
+  sendMessage(`Heartbeat - ${currentDate.toLocaleString()}`, true);
+}
+
+function initialize() {
   let count = 0;
-  const interval = 62 * 1000;
   const offset = 2000;
 
-  const currentDate = new Date();
-  const message = isResuming
-    ? `Polling ended ): Restarting script execution at ${currentDate.toLocaleString()}...`
-    : `Hello, I'm a robot, and I'll help you find a PS5 from one of ${Object.keys(Companies).join(
-        ", "
-      )}. My current polling interval is 1 minute. Beginning script execution at ${currentDate.toLocaleString()}...`;
-
-  console.log(message);
+  heartbeat();
+  setInterval(() => {
+    heartbeat();
+  }, HEARTBEAT_INTERVAL);
 
   setRandomInterval(
     () => {
       console.log(`Running scraper at ${new Date()}, iteration ${count++}`);
       runScraper();
     },
-    interval - offset,
-    interval + offset
+    SCRAPE_INTERVAL - offset,
+    SCRAPE_INTERVAL + offset
   );
 }
 
-initialize(true);
+initialize();
