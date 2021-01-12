@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node -r esm ./src/scraper.ts"
+    "start": "ts-node -r esm ./src/scraper.ts",
+    "debug": "ts-node -r esm ./src/scraper.ts debug"
   },
   "keywords": [],
   "author": "",

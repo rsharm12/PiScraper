@@ -1,7 +1,13 @@
 import axios from "axios";
 import login from "facebook-chat-api";
 import dotenv from "dotenv";
-import { validateBestBuy, validateWalmart, validateAmazon, validateGameStop } from "./validators";
+import {
+  validateBestBuy,
+  validateWalmart,
+  validateAmazon,
+  validateGameStop,
+  validateTarget,
+} from "./validators";
 import setRandomInterval from "set-random-interval";
 
 // setup dotenv first
@@ -9,9 +15,10 @@ dotenv.config();
 
 type Company = "Amazon" | "Walmart" | "BestBuy" | "GameStop" | "AmazonDigital";
 
+// validators should return `true` if stock is available
 const Companies: Record<
   Company,
-  { url: string; validator: (_: string) => boolean; withUserAgent?: boolean }
+  { url: string; validator: (_: any) => boolean; withUserAgent?: boolean }
 > = {
   Amazon: {
     url: "https://www.amazon.com/PlayStation-5-Console/dp/B08FC5L3RG/",
@@ -36,7 +43,24 @@ const Companies: Record<
   },
 };
 
+const TARGET_DATA_URL =
+  "https://redsky.target.com/redsky_aggregations/v1/web/pdp_fulfillment_v1?key=ff457966e64d5e877fdbad070f276d18ecec4a01&tcin={TCIN}&store_id={ID}&store_positions_store_id={ID}&has_store_positions_store_id=true&scheduled_delivery_store_id={ID}&pricing_store_id={ID}&fulfillment_test_mode=grocery_opu_team_member_test";
+
+const TARGET_LOCATION_IDS = ["840", "1284", "1903", "867", "339"];
+
+const TargetConfigurations = {
+  Console: {
+    url: "https://www.target.com/p/playstation-5-console/-/A-81114595",
+    tcin: "81114595",
+  },
+  Digital: {
+    url: "https://www.target.com/p/playstation-5-digital-edition-console/-/A-81114596",
+    tcin: "81114596",
+  },
+};
+
 function sendMessage(message: string, toAdmin?: boolean) {
+  console.log(message);
   login({ email: process.env.FB_USER, password: process.env.FB_PASS }, (err, api) => {
     if (err) return console.error(err);
 
@@ -49,7 +73,6 @@ function sendSuccessMessage(company: Company) {
   const message = `🟢 PS5 Available at ${company} on ${currentDate.toLocaleString()} ${
     Companies[company].url
   }`;
-  console.log(message);
   sendMessage(message);
 }
 
@@ -71,7 +94,7 @@ async function loadWebsite(url: string, withUserAgent: boolean) {
   }
 }
 
-async function scrape(url: string, cb: (html: string) => boolean, withUserAgent = true) {
+async function scrape(url: string, cb: (html: any) => boolean, withUserAgent = true) {
   const html = await loadWebsite(url, withUserAgent);
   return html ? cb(html) : false;
 }
@@ -88,6 +111,29 @@ async function runScraper() {
       }
     })
   );
+
+  Object.entries(TargetConfigurations).forEach(async ([version, { url, tcin }]) => {
+    const isFoundArray = await Promise.all(
+      TARGET_LOCATION_IDS.map(async (id) => ({
+        location: id,
+        isFound: await scrape(
+          TARGET_DATA_URL.replace("{TCIN}", tcin).replace(/{ID}/g, id),
+          validateTarget
+        ),
+      }))
+    );
+
+    isFoundArray
+      .filter((p) => p.isFound)
+      .forEach((p) => {
+        isFound = true;
+        const currentDate = new Date();
+        const message = `🟢 ${version} PS5 Available at location ${
+          p.location
+        } Target on ${currentDate.toLocaleString()} ${url}`;
+        sendMessage(message);
+      });
+  });
 
   const returnMessage = isFound ? "PS5 Found!" : "No PS5 Found ):";
   console.log(returnMessage);
@@ -120,4 +166,4 @@ function initialize() {
   );
 }
 
-initialize();
+process.argv[2] === "debug" ? runScraper() : initialize();
