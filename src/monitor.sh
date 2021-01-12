@@ -31,7 +31,7 @@ start_scraper
 # check every minute
 while true; do 
     sleep 60;
-    if [ ! -z $(awk "/ECONNRESET|ERR! login/" "$OUTPUT_FILENAME") ]; then
+    if grep -q "ECONNRESET\|ERR! login/" "$OUTPUT_FILENAME"; then
      echo "Connection issue detected! Restarting..."
      start_scraper
     fi 
