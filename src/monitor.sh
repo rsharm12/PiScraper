@@ -6,7 +6,7 @@
 # the `nohup` command to allow freely connecting/disconnecting ssh sessions
 #
 # run `nohup monitor.sh &` to start the job
-#W
+#
 
 NODE_VERSION=$(node --version)
 OUTPUT_FILENAME="scraper.out"
