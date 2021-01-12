@@ -17,7 +17,7 @@ start_scraper () {
     echo "$NODE_PROCESS_ID killed successfully"
     rm -rf $OUTPUT_FILENAME
     echo "$OUTPUT_FILENAME deleted successfully"
-    nohup npm start > "$OUTPUT_FILENAME" 2>&1 &1
+    nohup npm start > "$OUTPUT_FILENAME" 2>&1 &
     echo "Scraper started!"
 }
 
