@@ -14,8 +14,11 @@ OUTPUT_FILENAME="scraper.out"
 start_scraper () {
     NODE_PROCESS_ID=$(pgrep node)
     kill -9 $NODE_PROCESS_ID
+    echo "$NODE_PROCESS_ID killed successfully"
     rm -rf $OUTPUT_FILENAME
+    echo "$OUTPUT_FILENAME deleted successfully"
     nohup npm start > "$OUTPUT_FILENAME" &
+    echo "Scraper started!"
 }
 
 if [[ "$NODE_VERSION" != *"12"* ]]; then

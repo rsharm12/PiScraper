@@ -66,7 +66,7 @@ async function loadWebsite(url: string, withUserAgent: boolean) {
     });
     return response.data;
   } catch (error) {
-    console.error(`${error} for ${url} - returning false...`);
+    console.log(`${error} for ${url} - returning false...`);
     return false;
   }
 }
