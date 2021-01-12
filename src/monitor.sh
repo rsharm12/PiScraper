@@ -12,7 +12,8 @@ NODE_VERSION=$(node --version)
 OUTPUT_FILENAME="scraper.out"
 
 start_scraper () {
-    kill -9 `pgrep node`
+    NODE_PROCESS_ID=$(pgrep node)
+    kill -9 $NODE_PROCESS_ID
     rm -rf $OUTPUT_FILENAME
     nohup npm start > "$OUTPUT_FILENAME" &
 }
@@ -27,7 +28,8 @@ start_scraper
 # check every minute
 while true; do 
     sleep 60;
-    if [ ! -z $(awk "/ECONNRESET|ECONNFAILURE/" "$OUTPUT_FILENAME") ]; then
+    if [ ! -z $(awk "/ECONNRESET|ERR! login/" "$OUTPUT_FILENAME") ]; then
+     echo "Connection issue detected! Restarting..."
      start_scraper
     fi 
 done
