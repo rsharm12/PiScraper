@@ -29,7 +29,7 @@ FB_ADMIN_THREAD_ID=<admin thread ID to send heartbeat>
 
 1. Where can I find the Messenger thread ID?
 
-    Navigate to `messenger.com` and click on the thread that you would like the scraper to send message to. The URL will be of the form `https://www.messenger.com/t/101242245728856958`. The thread ID is the second path param in the URL, so in the above case - `101242245728856958`
+    Navigate to `messenger.com` and click on the thread that you would like the scraper to send messages to. The URL will be of the form `https://www.messenger.com/t/101242245728856958`. The thread ID is the second path param in the URL, so in the above case - `101242245728856958`
        
 2. Does this tool only work on the Raspberry Pi?
 
