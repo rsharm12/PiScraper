@@ -1,6 +1,6 @@
 # PiScraper
 
-Scrape retail websites to determine availability of high-demand items e.g. PS5 using a Raspberry Pi. User is notified via Facebook Messenger through the `facebook-chat-api` (https://github.com/Schmavery/facebook-chat-api)
+Scrape retail websites to determine availability of high-demand items e.g. PS5 using a Raspberry Pi. User is notified via Discord through the `discord.js` API (https://github.com/discordjs)
 
 Included is a script that utilizes `nohup` in order to kick off the scraper job and allows freely SSHing into/out of the Pi.
 
@@ -13,10 +13,9 @@ Included is a script that utilizes `nohup` in order to kick off the scraper job 
 ## Usage
 1. create a `.env` file with the following structure
 ```
-FB_USER=<FB Messenger Username>
-FB_PASS=<FB Messenger Password>
-FB_THREAD_ID=<messenger thread ID to send notifications>
-FB_ADMIN_THREAD_ID=<admin thread ID to send heartbeat>
+DISCORD_TOKEN=<discord token>
+DISCORD_ADMIN_CHANNEL=<channel ID for admins>
+DISCORD_USER_CHANNEL=<channel ID to send notifications>
 ```
 
 2. `npm install`
@@ -29,7 +28,7 @@ FB_ADMIN_THREAD_ID=<admin thread ID to send heartbeat>
 
 1. Where can I find the Messenger thread ID?
 
-    Navigate to `messenger.com` and click on the thread that you would like the scraper to send messages to. The URL will be of the form `https://www.messenger.com/t/101242245728856958`. The thread ID is the second path param in the URL, so in the above case - `101242245728856958`
+    Navigate to `discord.com` and click on the thread that you would like the scraper to send messages to. The URL will be of the form `https://www.discord.com/channels/1234/4567`. The thread ID is the third path param in the URL, so in the above case - `4567`
        
 2. Does this tool only work on the Raspberry Pi?
 
