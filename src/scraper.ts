@@ -46,10 +46,17 @@ const Companies: Record<
 const TARGET_DATA_URL =
   "https://redsky.target.com/redsky_aggregations/v1/web/pdp_fulfillment_v1?key=ff457966e64d5e877fdbad070f276d18ecec4a01&tcin={TCIN}&store_id={ID}&store_positions_store_id={ID}&has_store_positions_store_id=true&scheduled_delivery_store_id={ID}&pricing_store_id={ID}&fulfillment_test_mode=grocery_opu_team_member_test";
 
-const TARGET_LOCATION_IDS = ["840", "1284", "1903", "867", "339"];
+const TARGET_LOCATION_IDS = {
+  Northgate: "1284",
+  Factoria: "339",
+  Ballard: "3327",
+  Naperville: "840",
+  Warrenville: "1903",
+  Bolingbrook: "867",
+};
 
 const TargetConfigurations = {
-  Console: {
+  Disk: {
     url: "https://www.target.com/p/playstation-5-console/-/A-81114595",
     tcin: "81114595",
   },
@@ -102,6 +109,7 @@ async function scrape(url: string, cb: (html: any) => boolean, withUserAgent = t
 async function runScraper() {
   let isFound = false;
 
+  // generic scraper
   await Promise.all(
     Object.entries(Companies).map(async ([company, { url, validator, withUserAgent }]) => {
       const isAvailable = await scrape(url, validator, withUserAgent);
@@ -112,10 +120,11 @@ async function runScraper() {
     })
   );
 
+  // Target-specific scraper
   Object.entries(TargetConfigurations).forEach(async ([version, { url, tcin }]) => {
     const isFoundArray = await Promise.all(
-      TARGET_LOCATION_IDS.map(async (id) => ({
-        location: id,
+      Object.entries(TARGET_LOCATION_IDS).map(async ([location, id]) => ({
+        location,
         isFound: await scrape(
           TARGET_DATA_URL.replace("{TCIN}", tcin).replace(/{ID}/g, id),
           validateTarget

@@ -6,6 +6,8 @@ interface ITargetStoreOptions {
   location_address: string;
   location_id: string;
   ship_to_store: IAvailability;
+  order_pickup: IAvailability;
+  in_store_only: IAvailability;
 }
 
 interface ITargetFulfillment {

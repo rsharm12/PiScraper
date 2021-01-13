@@ -28,13 +28,23 @@ export function validateGameStop(html: string) {
 
 export function validateTarget(targetResponse: ITargetData) {
   const fulfillment = targetResponse.data.product.fulfillment;
-  if (fulfillment.is_out_of_stock_in_all_store_locations) {
+  if (!fulfillment || fulfillment.is_out_of_stock_in_all_store_locations) {
     return false;
   }
 
-  return (
-    fulfillment.scheduled_delivery.availability_status !== "UNAVAILABLE" ||
-    fulfillment.shipping_options.availability_status !== "UNAVAILABLE" ||
-    fulfillment.store_options[0].ship_to_store.availability_status !== "UNAVAILABLE"
-  );
+  const availabilityOptions = [
+    fulfillment.scheduled_delivery,
+    fulfillment.shipping_options,
+    fulfillment.store_options[0].ship_to_store,
+    fulfillment.store_options[0].order_pickup,
+    fulfillment.store_options[0].in_store_only,
+  ];
+
+  return availabilityOptions
+    .map((a) => a.availability_status)
+    .some((status) => {
+      const isFound = status !== "UNAVAILABLE" && status !== "OUT_OF_STOCK";
+      isFound && console.log("Target PS5 reported found with status - " + status);
+      return isFound;
+    });
 }
