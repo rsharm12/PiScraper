@@ -1,21 +1,21 @@
 {
-	"compilerOptions": {
-		"outDir": "dist",
-		"target": "ESNext",
-		"module": "CommonJS",
-		"moduleResolution": "node",
-		"esModuleInterop": true,
-		"downlevelIteration": true,
-		"importHelpers": true,
-		"skipLibCheck": true,
-		"sourceMap": true,
-		"removeComments": true,
-		"noEmitOnError": true,
-		"strict": false,
-		"alwaysStrict": false,
-		"noImplicitAny": false,
-		"typeRoots": ["node_modules/@types/"]
-	},
-	"include": ["**/*.ts", "*.ts"],
-    "exclude": ["node_modules", "dist", "__tests__"]
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "ESNext",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "removeComments": true,
+    "noEmitOnError": true,
+    "strict": false,
+    "alwaysStrict": false,
+    "noImplicitAny": false,
+    "typeRoots": ["node_modules/@types/"]
+  },
+  "include": ["**/*.ts", "*.ts", "src/messenger.js"],
+  "exclude": ["node_modules", "dist", "__tests__"]
 }
