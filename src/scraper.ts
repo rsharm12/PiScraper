@@ -1,5 +1,4 @@
 import axios from "axios";
-import login from "facebook-chat-api";
 import dotenv from "dotenv";
 import {
   validateBestBuy,
@@ -9,6 +8,7 @@ import {
   validateTarget,
 } from "./validators";
 import setRandomInterval from "set-random-interval";
+import { Messenger } from "./messenger";
 
 // setup dotenv first
 dotenv.config();
@@ -66,21 +66,12 @@ const TargetConfigurations = {
   },
 };
 
-function sendMessage(message: string, toAdmin?: boolean) {
-  console.log(message);
-  login({ email: process.env.FB_USER, password: process.env.FB_PASS }, (err, api) => {
-    if (err) return console.error(err);
-
-    api.sendMessage(message, toAdmin ? process.env.FB_ADMIN_THREAD_ID : process.env.FB_THREAD_ID);
-  });
-}
-
 function sendSuccessMessage(company: Company) {
   const currentDate = new Date();
   const message = `🟢 PS5 Available at ${company} on ${currentDate.toLocaleString()} ${
     Companies[company].url
   }`;
-  sendMessage(message);
+  messenger.sendMessage(message);
 }
 
 async function loadWebsite(url: string, withUserAgent: boolean) {
@@ -140,7 +131,7 @@ async function runScraper() {
         const message = `🟢 ${version} PS5 Available at location ${
           p.location
         } Target on ${currentDate.toLocaleString()} ${url}`;
-        sendMessage(message);
+        messenger.sendMessage(message);
       });
   });
 
@@ -153,7 +144,7 @@ const HEARTBEAT_INTERVAL = 60 * 60 * 1000;
 
 function heartbeat() {
   const currentDate = new Date();
-  sendMessage(`Heartbeat - ${currentDate.toLocaleString()}`, true);
+  messenger.sendAdminMessage(`Heartbeat - ${currentDate.toLocaleString()}`);
 }
 
 function initialize() {
@@ -175,4 +166,5 @@ function initialize() {
   );
 }
 
-process.argv[2] === "debug" ? runScraper() : initialize();
+const job = process.argv[2] === "debug" ? runScraper : initialize;
+const messenger = new Messenger(job);
