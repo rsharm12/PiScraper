@@ -9,7 +9,6 @@ Included is a script that utilizes `nohup` in order to kick off the scraper job 
 2. Bash shell
 3. Raspberry Pi or similar
 
-Note: this tool can functionally work on any machine outside of Raspberry Pi prerequisites.
 
 ## Usage
 1. create a `.env` file with the following structure
@@ -26,4 +25,12 @@ FB_ADMIN_THREAD_ID=<admin thread ID to send heartbeat>
     - `npm run debug` (to debug)
     - `nohup src/monitor.sh &` (to kick off monitoring job)
 
+## FAQ
 
+1. where can I find the Messenger thread ID?
+
+Navigate to `messenger.com` and click on the thread that you would like the scraper to send message to. The URL will be of the form `https://www.messenger.com/t/101242245728856958`. The thread ID is the second path param in the URL, so in the above case - `101242245728856958`
+       
+2. does this tool only work on the Raspberry Pi
+
+No, it can run on any machine with NodeJS installed. However, the included script `monitor.sh` should only be used on a Unix-based system or Raspberry Pi
