@@ -26,7 +26,7 @@ DISCORD_USER_CHANNEL=<channel ID to send notifications>
 
 ## FAQ
 
-1. Where can I find the Messenger thread ID?
+1. Where can I find the Discord thread ID?
 
     Navigate to `discord.com` and click on the thread that you would like the scraper to send messages to. The URL will be of the form `https://www.discord.com/channels/1234/4567`. The thread ID is the third path param in the URL, so in the above case - `4567`
        
